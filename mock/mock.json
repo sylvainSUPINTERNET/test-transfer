@@ -1,0 +1,73 @@
+[
+    {
+        "id": "d7aed073de50eb0b",
+        "type": "function",
+        "z": "018fd80fd07e8626",
+        "name": "",
+        "func": "const fetch = nodeFetch;\n\n// utils\nfunction sleep(ms) {\n    return new Promise(resolve => setTimeout(resolve, ms));\n}\n\n\n\nlet urls = []\n\n// STEP 2\nfor ( let i = 1; i < 2; i++ ) {\n    urls = [...urls, `http://localhost:1880/cameras/${i}/transfer`]\n}\n\n// ATTENTION ça ne marche pas si on appel une API situé sur nodered ... !\nconst x = await Promise.allSettled( urls.map( async (url, index) => {\n    try {\n        await sleep(index * 400)\n        let resp = await fetch(url); \n        let data = await resp.arrayBuffer();\n        return data\n    } catch ( e ) {\n        return e\n    }\n\n}) );\n\nnode.warn(x)\n\n// const result = await Promise.allSettled( urls.map( async (url, index) => {\n//     try {\n//         // await timeout(2000);\n//         await sleep(index * 400) // make it run in non concurrence totaly and add before each exec one delay \n//         // if you just apply delay without index, that will run in concurrency way; and apply delay for each coroutine\n//         let resp = await fetch(url);\n//         return resp.arrayBuffer()\n//         // node.warn(resp.arrayBuffer().length)\n   \n//     } catch ( e ) {\n//         node.warn(e)\n//     }\n\n// }) );\n\n\n// if (result.filter( result => result.status === \"rejected\").length === 0) {\n//     node.warn(result)\n// } else {\n//     node.warn(\"get few error during getting buffer\")\n//     node.warn(result)\n// }\n\n\n    \nreturn msg;",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "nodeFetch",
+                "module": "node-fetch"
+            }
+        ],
+        "x": 620,
+        "y": 1260,
+        "wires": [
+            [],
+            [
+                "086992b7e1822d58"
+            ]
+        ]
+    },
+    {
+        "id": "f907bfbb818f4964",
+        "type": "inject",
+        "z": "018fd80fd07e8626",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 420,
+        "y": 1240,
+        "wires": [
+            [
+                "d7aed073de50eb0b"
+            ]
+        ]
+    },
+    {
+        "id": "086992b7e1822d58",
+        "type": "debug",
+        "z": "018fd80fd07e8626",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 830,
+        "y": 1320,
+        "wires": []
+    }
+]
