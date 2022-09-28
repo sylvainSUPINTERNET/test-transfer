@@ -20,14 +20,19 @@ import fetch from 'node-fetch';
 
     console.log("=============== PROMISE ALL SETTLED ===============")
     let urls = [];
-    for ( let i = 0; i < 1; i++ ) { 
+    for ( let i = 0; i < 40; i++ ) { 
 
         urls = [ ...urls, `http://localhost:1880/cameras/${i}/transfer` ];
     }
 
     console.log(new Date().toISOString());
-    const result = await Promise.allSettled( urls.map( async url => {
-        await wait(400);
+    const result = await Promise.allSettled( urls.map( async (url, index) => {
+        // task concurrency will wait for 400mms then start and run together
+        // await wait(400); 
+
+        // will wait for 400 ms before running other task
+        await wait(index * 400);
+        
         let resp = await fetch(url); 
         return resp.arrayBuffer();
     }) );
