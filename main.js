@@ -25,6 +25,7 @@ import fetch from 'node-fetch';
         urls = [ ...urls, `http://localhost:1880/cameras/${i}/transfer` ];
     }
 
+    
     console.log(new Date().toISOString());
     const result = await Promise.allSettled( urls.map( async (url, index) => {
         // task concurrency will wait for 400mms then start and run together
